@@ -67,4 +67,19 @@ def escolhas():
                 
         print(f"Dados guardados até agora: {dados_escolhidos}")
     
-jogar()
+def menu():
+    print("=== MENU ===")
+    print("Esse é o jogo do general")
+    print("vamos comecar?")
+    print("digite 1 para sim")
+    print("digite 2 para nao")
+    while True:
+        opcao = int(input("digite a opcao desejada: "))
+        if opcao == 1:
+            jogar()
+        elif opcao == 2:
+            print("obrigado por jogar")
+            break
+        else:
+            print("opcao invalida")
+menu()
