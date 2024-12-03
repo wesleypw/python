@@ -18,11 +18,11 @@ def jogar():
         dados_guardados = escolhas()
         
         # Verifica se todos os dados são iguais
-        if len(dados_guardados) >= 2 and all(dado == dados_guardados[0] for dado in dados_guardados):
+        if len(dados_guardados) >= 2 an all(dado == dados_guardados[0] for dado in dados_guardados):
             print("\nParabéns! Você conseguiu dados iguais!")
             return True
         else:
-            if i < tentativas - 1:  # Se não for a última tentativa
+            if i < tentativas - 1:  # Se não for a última                  
                 print("\nTente novamente! Os dados não são iguais.")
             else:
                 print("\nGame Over! Suas tentativas acabaram.")
@@ -51,7 +51,7 @@ def escolhas():
                 pos = int(pos)
                 if 1 <= pos <= 5:
                     if pos == 1:
-                        dados_escolhidos.append(dado1)
+                        dados_escolhidos.append(dado)
                     elif pos == 2:
                         dados_escolhidos.append(dado2)
                     elif pos == 3:
@@ -82,4 +82,3 @@ def menu():
             break
         else:
             print("opcao invalida")
-menu()
