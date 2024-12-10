@@ -84,8 +84,8 @@ class AmigoSecreto:
             # Função interna para realizar a consulta
             nome = entrada_consulta.get().strip()
             if nome in self.sorteio:  # Verifica se o nome existe no sorteio
-                messagebox.showinfo("Seu Amigo Secreto", 
-                                  f"Olá {nome}!\nSeu amigo secreto é: {self.sorteio[nome]}")
+                messagebox.showinfo("Seu Amigo Secreto", f"Olá {nome}!\nSeu amigo secreto é: {self.sorteio[nome]}")
+                ,,
                 janela_consulta.destroy()  # Fecha a janela após consulta
             else:
                 messagebox.showwarning("Erro", "Nome não encontrado!")
