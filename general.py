@@ -1,64 +1,132 @@
+import tkinter as tk
+from tkinter import messagebox
 import random
-def dados():
-    valores = []
-    for i in range(5):
-        valores.append(random.randint(1,6))
-    return valores[0], valores[1], valores[2], valores[3], valores[4]
-dado1, dado2, dado3, dado4, dado5 = dados()
-def jogar():
-    tentativas = 3
-    for i in range(tentativas):
-        print(f"\n=== Tentativa {i + 1} de {tentativas} ===")
-        global dado1, dado2, dado3, dado4, dado5
-        dado1, dado2, dado3, dado4, dado5 = dados()
-        
-        dados_guardados = escolhas()
-        
-        # Verifica se todos os dados são iguais
-        if len(dados_guardados) >= 2 and all(dado == dados_guardados[0] for dado in dados_guardados):
-            print("\nParabéns! Você conseguiu dados iguais!")
-            return True
-        else:
-            if i < tentativas - 1:  # Se não for a última tentativa
-                print("\nTente novamente! Os dados não são iguais.")
-            else:
-                print("\nGame Over! Suas tentativas acabaram.")
-                return False
-def escolhas():
-    dados_escolhidos = []
-    print(f"\nDados atuais: {dado1}, {dado2}, {dado3}, {dado4}, {dado5}")
-    
-    for tentativa in range(3):
-        print(f"\nTentativa {tentativa + 1} de 3")
-        print("Quais dados você quer guardar? (Digite os números dos dados separados por espaço)")
-        print("Exemplo: Se quiser guardar o primeiro e terceiro dado, digite: 1 3")
-        print("Pressione Enter para pular a tentativa")
-        
-        escolha = input("Sua escolha: ").strip()
-        
-        if not escolha:  # Se o usuário só apertar Enter
-            continue
+
+class JogoDeDados:
+    def __init__(self, master):
+        self.master = master
+        master.title("Jogo de Dados")
+        master.geometry("500x600")
+        master.configure(bg='#f0f0f0')
+
+        self.tentativas_restantes = 3
+        self.dados_atuais = []
+        self.dados_guardados = []
+
+        self.criar_interface()
+
+    def criar_interface(self):
+        # Título
+        self.titulo = tk.Label(self.master, text="Jogo de Dados", 
+                               font=("Arial", 20, "bold"), 
+                               bg='#f0f0f0', fg='#333')
+        self.titulo.pack(pady=20)
+
+        # Frame para os dados
+        self.frame_dados = tk.Frame(self.master, bg='#f0f0f0')
+        self.frame_dados.pack(pady=20)
+
+        self.labels_dados = []
+        for i in range(5):
+            label = tk.Label(self.frame_dados, text="?", 
+                             font=("Arial", 16), 
+                             width=4, relief=tk.RAISED, 
+                             bg='white', fg='#333')
+            label.grid(row=0, column=i, padx=5)
+            self.labels_dados.append(label)
+
+        # Botões de seleção de dados
+        self.frame_botoes = tk.Frame(self.master, bg='#f0f0f0')
+        self.frame_botoes.pack(pady=20)
+
+        self.botoes_selecao = []
+        for i in range(5):
+            btn = tk.Button(self.frame_botoes, text=f"Dado {i+1}", 
+                            command=lambda idx=i: self.selecionar_dado(idx),
+                            bg='#4CAF50', fg='white')
+            btn.grid(row=0, column=i, padx=5)
+            self.botoes_selecao.append(btn)
+
+        # Botão de jogar
+        self.btn_jogar = tk.Button(self.master, text="Jogar Dados", 
+                                   command=self.jogar_dados,
+                                   bg='#2196F3', fg='white', 
+                                   font=("Arial", 12, "bold"))
+        self.btn_jogar.pack(pady=20)
+
+        # Área de status
+        self.label_status = tk.Label(self.master, text="Bem-vindo ao Jogo de Dados!", 
+                                     bg='#f0f0f0', fg='#333', 
+                                     font=("Arial", 10))
+        self.label_status.pack(pady=10)
+
+        # Frame para dados guardados
+        self.frame_guardados = tk.Frame(self.master, bg='#f0f0f0')
+        self.frame_guardados.pack(pady=10)
+
+        self.label_guardados = tk.Label(self.frame_guardados, text="Dados Guardados: ", 
+                                        bg='#f0f0f0', fg='#333')
+        self.label_guardados.pack()
+
+    def jogar_dados(self):
+        if self.tentativas_restantes > 0:
+            # Gerar novos dados
+            self.dados_atuais = [random.randint(1, 6) for _ in range(5)]
             
-        posicoes = escolha.split()
-        for pos in posicoes:
-            try:
-                pos = int(pos)
-                if 1 <= pos <= 5:
-                    if pos == 1:
-                        dados_escolhidos.append(dado1)
-                    elif pos == 2:
-                        dados_escolhidos.append(dado2)
-                    elif pos == 3:
-                        dados_escolhidos.append(dado3)
-                    elif pos == 4:
-                        dados_escolhidos.append(dado4)
-                    elif pos == 5:
-                        dados_escolhidos.append(dado5)
-                else:
-                    print(f"Posição {pos} inválida. Use números de 1 até 5.")
-            except ValueError:
-                print(f"Entrada inválida: {pos}. Por favor, digite apenas números de 1 até 5.")
+            # Atualizar labels dos dados
+            for i, valor in enumerate(self.dados_atuais):
+                self.labels_dados[i].config(text=str(valor))
+            
+            self.tentativas_restantes -= 1
+            
+            # Verificar se há dados iguais guardados
+            if len(self.dados_guardados) >= 3 and all(d == self.dados_guardados[0] for d in self.dados_guardados):
+                messagebox.showinfo("Parabéns!", "Você conseguiu 3 ou mais dados iguais!")
+                self.reiniciar_jogo()
+            else:
+                self.label_status.config(text=f"Tentativas restantes: {self.tentativas_restantes}")
                 
-        print(f"Dados guardados até agora: {dados_escolhidos}")
-    
-jogar()
+                if self.tentativas_restantes == 0:
+                    messagebox.showinfo("Game Over", "Suas tentativas acabaram!")
+                    self.reiniciar_jogo()
+
+    def selecionar_dado(self, indice):
+        valor = self.dados_atuais[indice]
+        if valor not in self.dados_guardados:
+            self.dados_guardados.append(valor)
+            self.botoes_selecao[indice].config(state=tk.DISABLED, bg='gray')
+            
+            # Atualizar label de dados guardados
+            guardados_str = ", ".join(map(str, self.dados_guardados))
+            self.label_guardados.config(text=f"Dados Guardados: {guardados_str}")
+            
+            # Verificar se já tem 3 ou mais dados iguais
+            if len(self.dados_guardados) >= 3 and all(d == self.dados_guardados[0] for d in self.dados_guardados):
+                messagebox.showinfo("Parabéns!", "Você conseguiu 3 ou mais dados iguais!")
+                self.reiniciar_jogo()
+
+    def reiniciar_jogo(self):
+        self.tentativas_restantes = 3
+        self.dados_atuais = []
+        self.dados_guardados = []
+        
+        # Resetar labels dos dados
+        for label in self.labels_dados:
+            label.config(text="?")
+        
+        # Reativar botões
+        for btn in self.botoes_selecao:
+            btn.config(state=tk.NORMAL, bg='#4CAF50')
+        
+        # Limpar label de dados guardados
+        self.label_guardados.config(text="Dados Guardados: ")
+        
+        self.label_status.config(text="Bem-vindo ao Jogo de Dados!")
+
+def main():
+    root = tk.Tk()
+    jogo = JogoDeDados(root)
+    root.mainloop()
+
+if __name__ == "__main__":
+    main()
