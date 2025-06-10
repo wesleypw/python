@@ -1,32 +1,28 @@
 cpf = input("Digite o CPF: ")
-
+ 
 def validacao_cpf():
-    tratar = tratar_cpf(cpf)
-    tratar = cpf 
-
     num = list(range(1,11))
     for i in num:
-        for j in tratar:
+        for j in cpf:
             mult = i * j
-            print(mult)    
+            print(mult)
 
-def tratar_cpf(cpf):
-    if len(cpf) == 11 or len(cpf) == 14:
-        if len(cpf) == 14:
-            cpf14 = int(cpf.replace('.', '').replace('-', ''))    
-        elif len(cpf) == 11:
-            cpf11 = int(cpf)
-            cpf = cpf11, cpf14
+    
+   
+
+def tratar_cpf(c):
+    if len(c) == 11 or len(c) == 14:
+        if len(c) == 14:
+            cpf14 = int(c.replace('.', ''),c.replace('-', ''))  
+            c = cpf14 
+        elif len(c) == 11:
+            cpf11 = int(c)
+            c = cpf11  
         
 
-validacao_cpf()
 
-    
-
-        
-    
-    
- 
+tratar_cpf(cpf)
+print(cpf)
 
 
 
